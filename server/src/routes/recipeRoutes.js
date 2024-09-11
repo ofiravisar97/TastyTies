@@ -5,8 +5,6 @@ import { validateData } from "../middlewares/validateData.js";
 import { addRecipeScehma } from "../schemas/recipeSchemas.js";
 const router = express.Router();
 
-router.use(isAuth);
-
-router.post("/addRecipe", validateData(addRecipeScehma), addRecipe);
+router.post("/addRecipe", isAuth, validateData(addRecipeScehma), addRecipe);
 
 export default router;

@@ -27,7 +27,6 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-    exposedHeaders: ["Set-Cookie"],
   })
 );
 app.use(helmet());
@@ -44,8 +43,9 @@ app.use((err, req, res, next) => {
 });
 
 app.use(authRoutes);
-app.use(followsRoutes);
 app.use(refreshRoutes);
+
+app.use(followsRoutes);
 app.use(recipeRoutes);
 app.use(usersRoutes);
 app.use(likesRoutes);

@@ -46,15 +46,15 @@ export const login = catchAsync(async (req, res) => {
 
   // Validation
   if (!foundUser || foundUser.length == 0) {
-    throw new AppError("Invalid email or password.", StatusCodes.FORBIDDEN);
+    throw new AppError("Invalid email or password.", StatusCodes.BAD_REQUEST);
   }
 
   const isEqual = await bcrypt.compare(password, foundUser[0].password);
   if (!isEqual) {
-    throw new AppError("Invalid email or password.", StatusCodes.FORBIDDEN);
+    throw new AppError("Invalid email or password.", StatusCodes.BAD_REQUEST);
   }
 
-  const accessToken = await jwt.sign(
+  const accessToken = jwt.sign(
     {
       userId: foundUser[0].id,
       displayName: foundUser[0].displayName,
@@ -63,7 +63,7 @@ export const login = catchAsync(async (req, res) => {
     { expiresIn: "15d", algorithm: "HS256" }
   );
 
-  const refreshToken = await jwt.sign(
+  const refreshToken = jwt.sign(
     {
       userId: foundUser[0].id,
       displayName: foundUser[0].displayName,
@@ -72,21 +72,20 @@ export const login = catchAsync(async (req, res) => {
     { expiresIn: "30d", algorithm: "HS256" }
   );
 
-  res.cookie("jwt", refreshToken, {
-    httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    sameSite: "none",
-    secure: "true",
-  });
-
   await db
     .update(UserSchema)
     .set({ refreshToken })
     .where(eq(UserSchema.id, foundUser[0].id));
 
+  res.cookie("refresh", refreshToken, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+
   res.status(StatusCodes.OK).json({
     userId: foundUser[0].id,
     displayName: foundUser[0].displayName,
     accessToken,
+    avatarUrl: foundUser[0].avatarUrl,
   });
 });

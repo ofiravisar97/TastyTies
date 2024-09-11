@@ -28,20 +28,18 @@ const useLogin = () => {
         throw new Error("Something bad happend");
       }
 
-      const { accessToken, displayName, userId } = response.data;
+      const { accessToken, displayName, userId, avatarUrl } = response.data;
 
       setAuth({
         token: accessToken,
         displayName,
         userId,
-        avatar: "",
+        avatar: avatarUrl,
       });
-
-      console.log(response.headers);
 
       if (accessToken) {
         setTimeout(() => {
-          // navigate("/", { replace: true });
+          navigate("/", { replace: true });
         }, 1000);
       }
     } catch (err) {

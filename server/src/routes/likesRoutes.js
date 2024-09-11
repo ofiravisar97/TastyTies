@@ -6,9 +6,7 @@ import { isAuth } from "../middlewares/isAuth.js";
 
 const router = express.Router();
 
-router.use(isAuth);
-
-router.post("/like", validateData(likeSchema), like);
-router.post("/unlike", validateData(likeSchema), unlike);
+router.post("/like", isAuth, validateData(likeSchema), like);
+router.post("/unlike", isAuth, validateData(likeSchema), unlike);
 
 export default router;

@@ -6,9 +6,7 @@ import { followSchema } from "../schemas/followSchemas.js";
 
 const router = express.Router();
 
-router.use(isAuth);
-
-router.post("/follow", validateData(followSchema), follow);
-router.post("/unfollow", validateData(followSchema), unfollow);
+router.post("/follow", isAuth, validateData(followSchema), follow);
+router.post("/unfollow", isAuth, validateData(followSchema), unfollow);
 
 export default router;

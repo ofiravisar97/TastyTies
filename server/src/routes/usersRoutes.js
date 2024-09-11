@@ -11,11 +11,9 @@ import { getUserSchema } from "../schemas/usersSchema.js";
 
 const router = express.Router();
 
-router.use(isAuth);
-
-router.get("/search", searchHandler);
-router.put("/bio", changeBioHandler);
-router.put("/changeAvatar", changeAvatarHandler);
-router.post("/getUser", validateData(getUserSchema), getUserHandler);
+router.get("/search", isAuth, searchHandler);
+router.put("/bio", isAuth, changeBioHandler);
+router.put("/changeAvatar", isAuth, changeAvatarHandler);
+router.post("/getUser", isAuth, validateData(getUserSchema), getUserHandler);
 
 export default router;
