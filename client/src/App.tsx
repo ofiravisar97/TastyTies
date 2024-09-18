@@ -4,7 +4,10 @@ import Login from "./pages/auth/login/Login";
 import AppLayout from "./pages/AppLayout";
 import Protected from "./utils/Protected";
 import { lazy, Suspense } from "react";
-const Feed = lazy(() => import("./pages/main/Feed"));
+import Register from "./pages/auth/register/Register";
+
+const Profile = lazy(() => import("./pages/main/Profile/Profile"));
+const Feed = lazy(() => import("./pages/main/Feed/Feed"));
 
 const router = createBrowserRouter([
   {
@@ -22,11 +25,23 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "/profile/:id",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Profile />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axios";
 import useAuth from "./useAuth";
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
+  const navigate = useNavigate();
   const refresh = async () => {
     try {
       const response = await axiosInstance.get("/refresh", {
@@ -20,6 +22,7 @@ const useRefreshToken = () => {
       return accessToken;
     } catch (err) {
       console.log(err);
+      navigate("/login");
     }
   };
 

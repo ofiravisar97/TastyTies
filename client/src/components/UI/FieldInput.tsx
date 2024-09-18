@@ -1,5 +1,5 @@
 import React, { HTMLInputTypeAttribute } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { FieldError, UseFormRegister } from "react-hook-form";
 
 type FieldInputProps = {
   name: string;

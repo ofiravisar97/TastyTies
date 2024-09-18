@@ -1,32 +1,34 @@
 import FieldInput from "../../../components/UI/FieldInput";
 import LoadingButton from "../../../components/UI/LoadingButton";
 import { NavLink } from "react-router-dom";
-import useLogin from "../../../hooks/useLogin";
 import { useForm } from "react-hook-form";
-import { LoginSchema, LoginType } from "../../../types/LoginSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterSchemaType } from "../../../types/RegisterSchema";
+import useRegister from "../../../hooks/useRegister";
 
-const LoginForm = () => {
-  const { login } = useLogin();
+const RegisterForm = () => {
+  const registerUser = useRegister();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginType>({
-    resolver: zodResolver(LoginSchema),
-  });
+    formState: { isSubmitting },
+  } = useForm<RegisterSchemaType>();
 
   return (
     <form
       className="p-4 space-y-4 h-fit w-[90%]"
       method="POST"
-      onSubmit={handleSubmit(login)}
+      onSubmit={handleSubmit(registerUser)}
     >
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Login</h1>
-        <h4>Login to your account.</h4>
+        <h1 className="text-3xl font-bold">Register</h1>
+        <h4>Register as a member.</h4>
       </div>
-
+      <FieldInput
+        placeholder="Name"
+        name="name"
+        label="Name"
+        register={register}
+      />
       <FieldInput
         placeholder="Email"
         name="email"
@@ -40,21 +42,27 @@ const LoginForm = () => {
         type="password"
         register={register}
       />
+      <FieldInput
+        placeholder="Confirm Password"
+        name="confirm"
+        label="Confirm Password"
+        type="password"
+        register={register}
+      />
       <LoadingButton
-        label="Login"
+        label="Register"
         type="submit"
         loading={isSubmitting}
         className="w-[100%]"
       />
       <NavLink
-        to="/register"
+        to="/login"
         className="flex items-center justify-center hover:underline"
       >
-        Not a member yet?{" "}
-        <strong className="text-primary ml-2">Register</strong>
+        Already a member? <strong className="text-primary ml-2">Login</strong>
       </NavLink>
     </form>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

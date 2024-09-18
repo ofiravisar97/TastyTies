@@ -3,8 +3,10 @@ import SearchBar from "./Search/SearchBar";
 
 const Navbar = () => {
   return (
-    <div className="sticky w-full h-[4rem] p-2 shadow-md flex items-center justify-around">
-      <h1 className="font-semibold text-3xl text-primary">TastyTies</h1>
+    <div className="sticky w-screen h-[4rem] px-2 shadow-md flex items-center justify-around z-10">
+      <h1 className="hidden font-semibold text-3xl text-primary lg:block">
+        TastyTies
+      </h1>
       <SearchBar />
       <Menu />
     </div>

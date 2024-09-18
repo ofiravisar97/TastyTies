@@ -9,5 +9,5 @@ export type AuthType = {
 
 export type AuthContextType = {
   auth: AuthType;
-  setAuth: Dispatch<SetStateAction<AuthType>>;
+  setAuth: Dispatch<SetStateAction<AuthType | null>>;
 };

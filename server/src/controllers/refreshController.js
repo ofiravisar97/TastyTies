@@ -3,11 +3,12 @@ import jwt from "jsonwebtoken";
 import db from "../db/db.js";
 import { UserSchema } from "../db/schemas.js";
 import { eq } from "drizzle-orm";
+import AppError from "../utils/AppError.js";
 
-export const refresh = (req, res) => {
+export const refresh = (req, res, next) => {
   const cookie = req.cookies;
   if (!cookie?.refresh) {
-    return res.status(StatusCodes.FORBIDDEN);
+    next(new AppError("No cookie found", StatusCodes.BAD_REQUEST));
   }
   const refresh = cookie.refresh;
 
@@ -36,6 +37,7 @@ export const refresh = (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       return res.status(StatusCodes.FORBIDDEN);
     });
 };

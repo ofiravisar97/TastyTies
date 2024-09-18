@@ -5,6 +5,7 @@ import {
   changeBioHandler,
   changeAvatarHandler,
   getUserHandler,
+  fetchFeed,
 } from "../controllers/usersController.js";
 import { validateData } from "../middlewares/validateData.js";
 import { getUserSchema } from "../schemas/usersSchema.js";
@@ -15,5 +16,6 @@ router.get("/search", isAuth, searchHandler);
 router.put("/bio", isAuth, changeBioHandler);
 router.put("/changeAvatar", isAuth, changeAvatarHandler);
 router.post("/getUser", isAuth, validateData(getUserSchema), getUserHandler);
+router.get("/feed", isAuth, fetchFeed);
 
 export default router;

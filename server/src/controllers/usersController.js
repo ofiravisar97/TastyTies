@@ -1,7 +1,12 @@
 import catchAsync from "../utils/catchAsync.js";
 import db from "../db/db.js";
-import { UserSchema, UserDataSchema, FollowersSchema } from "../db/schemas.js";
-import { and, eq, gte, like } from "drizzle-orm";
+import {
+  UserSchema,
+  UserDataSchema,
+  FollowersSchema,
+  RecipeSchema,
+} from "../db/schemas.js";
+import { and, desc, eq, gte, like } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../utils/AppError.js";
 
@@ -40,6 +45,9 @@ export const searchHandler = catchAsync(async (req, res) => {
     .from(UserSchema)
     .where(like(UserSchema.displayName, `${query}%`))
     .limit(8);
+  if (!users || users.length === 0) {
+    res.status(StatusCodes.NOT_FOUND);
+  }
   res.status(StatusCodes.OK).json(users);
 });
 
@@ -87,4 +95,24 @@ export const getUserHandler = catchAsync(async (req, res) => {
   const user = { ...foundUser[0], isFollowing, isMe };
 
   res.status(StatusCodes.OK).json(user);
+});
+
+export const fetchFeed = catchAsync(async (req, res) => {
+  const recipes = await db
+    .select({
+      userId: UserSchema.id,
+      avatarURL: UserSchema.avatarUrl,
+      username: UserSchema.displayName,
+      recipeId: RecipeSchema.id,
+      title: RecipeSchema.title,
+      description: RecipeSchema.description,
+      imageURL: RecipeSchema.imageUrl,
+      likesCount: RecipeSchema.likesCount,
+      createdAt: RecipeSchema.createdAt,
+    })
+    .from(RecipeSchema)
+    .leftJoin(UserSchema, eq(UserSchema.id, RecipeSchema.userId))
+    .orderBy(desc(RecipeSchema.createdAt));
+
+  res.status(StatusCodes.OK).json(recipes);
 });

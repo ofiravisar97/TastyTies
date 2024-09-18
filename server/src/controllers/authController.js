@@ -89,3 +89,11 @@ export const login = catchAsync(async (req, res) => {
     avatarUrl: foundUser[0].avatarUrl,
   });
 });
+
+export const logout = catchAsync(async (req, res) => {
+  res.clearCookie("refresh", {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+  res.json({ message: "cookie cleared" });
+});

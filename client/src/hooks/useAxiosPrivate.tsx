@@ -4,7 +4,7 @@ import { axiosPrivate } from "../utils/axios";
 import useRefreshToken from "./useRefreshToken";
 
 const useAxiosPrivate = () => {
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
   const refresh = useRefreshToken();
 
   useLayoutEffect(() => {

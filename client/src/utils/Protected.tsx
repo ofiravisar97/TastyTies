@@ -9,19 +9,21 @@ const Protected = ({ children }: PropsWithChildren) => {
   const refresh = useRefreshToken();
 
   useEffect(() => {
-    const verifyRefreshToken = async () => {
-      try {
-        await refresh();
-      } catch (err) {
-        console.log(err);
-      }
+    const verifyRefreshToken = () => {
+      refresh()
+        .catch((token) => {
+          if (!token) {
+            navigate("/login");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate("/login");
+        });
     };
 
     !auth?.token ? verifyRefreshToken() : null;
-    if (!auth) {
-      navigate("/");
-    }
-  }, []);
+  }, [auth]);
 
   return <>{children}</>;
 };
