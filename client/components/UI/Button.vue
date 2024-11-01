@@ -1,15 +1,20 @@
 <template>
-  <button
-    class="bg-primary text-white font-semibold rounded-md shadow-md p-2 w-[100%] flex items-center justify-center gap-2"
-  >
+  <button :class="button({ variant })">
     <slot />
   </button>
 </template>
 
 <script lang="ts" setup>
-type Props = {
-  variant: "outline" | "primary";
-};
+import { cva, type VariantProps } from "class-variance-authority";
 
-defineProps<Props>();
+const { variant } = defineProps(["variant"]);
+
+const button = cva(["p-2 font-semibold rounded-md"], {
+  variants: {
+    variant: {
+      primary: "bg-primary text-white",
+      outline: "bg-white text-primary border-2 border-primary",
+    },
+  },
+});
 </script>
