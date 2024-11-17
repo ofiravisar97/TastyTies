@@ -6,7 +6,7 @@ import Logo from "@/components/UI/Logo";
 import PasswordInput from "@/components/UI/PasswordInput";
 import Link from "next/link";
 import { useActionState } from "react";
-import { MdEmail } from "react-icons/md";
+import { Mail } from "lucide-react";
 import useLoginActions from "../hooks/useLoginActions";
 
 const LoginForm = () => {
@@ -15,6 +15,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+
   return (
     <form className="bg-white rounded-sm border-[1px] border-borderColor items-center shadow-sm flex flex-col w-[90%] lg:w-[35%] h-[60%] p-4 space-y-4">
       <Logo size="xxxxl" />
@@ -29,7 +30,7 @@ const LoginForm = () => {
         label="Email"
         name="email"
         placeholder="Email"
-        icon={<MdEmail />}
+        icon={<Mail />}
       />
       <PasswordInput required />
 

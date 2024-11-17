@@ -1,5 +1,8 @@
 const useLoginActions = () => {
-  const handleLogin = async (prevState: any, formData: FormData) => {
+  const handleLogin = async (
+    prevState: unknown,
+    formData: FormData
+  ): Promise<string> => {
     return "Error";
   };
   return handleLogin;
