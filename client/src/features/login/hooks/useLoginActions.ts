@@ -1,9 +1,8 @@
+import { FieldValues } from "react-hook-form";
+
 const useLoginActions = () => {
-  const handleLogin = async (
-    prevState: unknown,
-    formData: FormData
-  ): Promise<string> => {
-    return "Error";
+  const handleLogin = async (data: FieldValues) => {
+    console.log(data)
   };
   return handleLogin;
 };

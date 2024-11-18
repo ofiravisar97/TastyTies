@@ -35,11 +35,11 @@ const PasswordInput = ({ error, variant, className, ...props }: Props) => {
       </label>
       <div className="flex bg-neutral-100 items-center border-1 border-borderColor relative">
         <input
+          {...props}
           placeholder="Password"
           type={hidden ? "password" : "text"}
           id="password"
-          name="password"
-          {...props}
+          name="password"    
           className={twMerge(className, input({ variant }))}
         />
         <span className="absolute inset-y-0 right-0 flex items-center pr-3">
