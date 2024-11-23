@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React, { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const button = cva(
   ["shadow-sm rounded-sm flex items-center py-[4px] justify-center gap-2"],
@@ -30,7 +30,8 @@ const LoadingButton = ({
 }: Props) => {
   return (
     <button {...props} className={twMerge(className, button({ variant }))}>
-      {isLoading ? <Loader className={"animate-spin"} /> : null} {children}
+      {isLoading ? <Loader2 className={"animate-spin size-4"} /> : null}{" "}
+      {children}
     </button>
   );
 };

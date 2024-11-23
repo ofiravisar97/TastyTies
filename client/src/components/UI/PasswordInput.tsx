@@ -5,6 +5,7 @@ import { InputHTMLAttributes, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import React from "react";
 import { Eye } from "lucide-react";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 
 const input = cva(
   ["border-borderColor border-[1px] px-2 bg-transparent pr-8 py-[4px] w-full"],
@@ -21,25 +22,36 @@ const input = cva(
 );
 
 type Props = {
+  label: string;
   error?: string | null;
+  name: string;
+  register: UseFormRegister<FieldValues | any>;
   icon?: React.ReactNode;
 } & InputHTMLAttributes<HTMLInputElement> &
   VariantProps<typeof input>;
 
-const PasswordInput = ({ error, variant, className, ...props }: Props) => {
+const PasswordInput = ({
+  error,
+  variant,
+  className,
+  register,
+  label,
+  name,
+  ...props
+}: Props) => {
   const [hidden, setHidden] = useState(true);
   return (
     <div className="flex flex-col w-full">
-      <label className="font-semibold" htmlFor="password">
-        Password
+      <label className="font-semibold" htmlFor={label}>
+        {label}
       </label>
       <div className="flex bg-neutral-100 items-center border-1 border-borderColor relative">
         <input
           {...props}
+          {...register(name)}
           placeholder="Password"
           type={hidden ? "password" : "text"}
-          id="password"
-          name="password"    
+          id={label}
           className={twMerge(className, input({ variant }))}
         />
         <span className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -50,7 +62,7 @@ const PasswordInput = ({ error, variant, className, ...props }: Props) => {
           />
         </span>
       </div>
-      {error && <p className="text-red-700 font-semibold">error</p>}
+      {error && <p className="text-red-700 font-semibold">{error}</p>}
     </div>
   );
 };
