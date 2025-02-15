@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Pressable,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,10 +16,13 @@ import PasswordInput from "../../src/components/PasswordInputs";
 import Input from "../../src/components/Input";
 import Button from "../../src/components/Button";
 import colors from "../../src/consts/colors";
+import {useRouter} from 'expo-router'
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   const handleLogin = () => {
     // Add your login logic here
@@ -58,9 +62,9 @@ const LoginPage = () => {
 
             <View style={styles.signupContainer}>
               <Text style={styles.signupText}>Don't have an account? </Text>
-              <TouchableOpacity>
+              <Pressable onPress={() => router.push('/register')}>
                 <Text style={styles.signupLink}>Sign Up</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <ActivityIndicator size="large" color={colors.primary} />
