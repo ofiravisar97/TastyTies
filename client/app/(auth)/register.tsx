@@ -18,6 +18,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { RegisterDataType, registerSchema } from "../../src/schemas/auth";
 import { z } from "zod";
+import * as Burnt from "burnt";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -34,6 +35,11 @@ const RegisterPage = () => {
     try {
       setLoading(true);
       setErrors({});
+      Burnt.toast({
+        title: "Registered successfully",
+        preset: "done",
+        haptic: "success",
+      });
 
       const l = registerSchema.parse(userData);
     } catch (error) {
