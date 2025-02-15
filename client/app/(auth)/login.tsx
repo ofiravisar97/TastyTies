@@ -16,13 +16,13 @@ import PasswordInput from "../../src/components/PasswordInputs";
 import Input from "../../src/components/Input";
 import Button from "../../src/components/Button";
 import colors from "../../src/consts/colors";
-import {useRouter} from 'expo-router'
+import { useRouter } from "expo-router";
 
 const LoginPage = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const router = useRouter();
 
   const handleLogin = () => {
     // Add your login logic here
@@ -41,18 +41,23 @@ const LoginPage = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.title}>TastyTies</Text>
+            <Text style={styles.title}>
+              Tasty<Text style={{ color: colors.primary }}>Ties</Text>
+            </Text>
             <Text style={styles.subtitle}>A tasty way to connect</Text>
           </View>
 
           <View style={styles.form}>
             <Input
-              value={email}
-              setValue={setEmail}
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
               iconName="mail-outline"
-              error="Cant email"
             />
-            <PasswordInput setPassword={setPassword} password={password} />
+            <PasswordInput
+              onChangeText={(password) => setPassword(password)}
+              value={password}
+            />
 
             <TouchableOpacity style={styles.forgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -62,8 +67,12 @@ const LoginPage = () => {
 
             <View style={styles.signupContainer}>
               <Text style={styles.signupText}>Don't have an account? </Text>
-              <Pressable onPress={() => router.push('/register')}>
-                <Text style={styles.signupLink}>Sign Up</Text>
+              <Pressable
+                onPress={() => {
+                  router.push("/register");
+                }}
+              >
+                <Text style={styles.signupLink}>Register.</Text>
               </Pressable>
             </View>
 

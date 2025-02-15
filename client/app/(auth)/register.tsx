@@ -1,8 +1,7 @@
-import { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,47 +14,116 @@ import PasswordInput from "../../src/components/PasswordInputs";
 import Input from "../../src/components/Input";
 import Button from "../../src/components/Button";
 import colors from "../../src/consts/colors";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { RegisterDataType, registerSchema } from "../../src/schemas/auth";
+import { z } from "zod";
 
 const RegisterPage = () => {
+  const router = useRouter();
+  const [userData, setUserData] = useState<RegisterDataType>({
+    email: "",
+    displayName: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      setErrors({});
+
+      const l = registerSchema.parse(userData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const formattedErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path) {
+            formattedErrors[err.path[0]] = err.message;
+          }
+        });
+        setErrors(formattedErrors);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 30}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
         >
           <View style={styles.header}>
-            <Text style={styles.title}>TastyTies</Text>
+            <Text style={styles.title}>
+              Tasty<Text style={{ color: colors.primary }}>Ties</Text>
+            </Text>
             <Text style={styles.subtitle}>A tasty way to connect</Text>
           </View>
 
           <View style={styles.form}>
             <Input
-              value={email}
-              setValue={setEmail}
               iconName="mail-outline"
-              error="Cant email"
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={userData.email}
+              onChangeText={(email) => setUserData({ ...userData, email })}
+              error={errors.email}
             />
-            <PasswordInput setPassword={setPassword} password={password} />
-
-            <TouchableOpacity style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            <Button title="Login" onPress={handleLogin} />
+            <Input
+              iconName="person-circle"
+              placeholder="Display Name"
+              value={userData.displayName}
+              onChangeText={(displayName) =>
+                setUserData({ ...userData, displayName })
+              }
+              error={errors.displayName}
+            />
+            <PasswordInput
+              value={userData.password}
+              onChangeText={(password) =>
+                setUserData({ ...userData, password })
+              }
+              placeholder="Password"
+              error={errors.password}
+            />
+            <PasswordInput
+              value={userData.confirmPassword}
+              onChangeText={(confirmPassword) =>
+                setUserData({ ...userData, confirmPassword })
+              }
+              placeholder="Confirm Password"
+              error={errors.confirmPassword}
+            />
+            <Button title="Register" onPress={handleRegister} />
 
             <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Don't have an account? </Text>
-              <TouchableOpacity>
-                <Text style={styles.signupLink}>Sign Up</Text>
-              </TouchableOpacity>
+              <Text style={styles.signupText}>Already a member ? </Text>
+              <Pressable
+                onPress={() => {
+                  router.back();
+                }}
+              >
+                <Text style={styles.signupLink}>Login</Text>
+              </Pressable>
             </View>
-
-            <ActivityIndicator size="large" color={colors.primary} />
+            <ActivityIndicator
+              size="large"
+              color={colors.primary}
+              animating={loading}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -71,7 +139,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: "flex-start", // Changed from center
+    paddingBottom: Platform.OS === "ios" ? 40 : 20, // Add extra padding at bottom
   },
   header: {
     marginBottom: 40,

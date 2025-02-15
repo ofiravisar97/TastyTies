@@ -1,34 +1,43 @@
 import { useState } from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  TextInputProps,
+  Text,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import colors from "../consts/colors";
 
 type Props = {
-  setPassword: (password: string) => void;
-  password: string;
-};
+  error?: string;
+} & TextInputProps;
 
-const PasswordInput = ({ setPassword, password }: Props) => {
+const PasswordInput = ({ error, ...props }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <View style={styles.inputContainer}>
-      <Ionicons name="lock-closed-outline" size={20} color="#666" />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry={!showPassword}
-      />
-      <TouchableOpacity
-        onPress={() => setShowPassword(!showPassword)}
-        style={styles.eyeIcon}
-      >
-        <Ionicons
-          name={showPassword ? "eye-outline" : "eye-off-outline"}
-          size={20}
-          color="#666"
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={20} color="#666" />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={!showPassword}
+          {...props}
         />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.eyeIcon}
+        >
+          <Ionicons
+            name={showPassword ? "eye-outline" : "eye-off-outline"}
+            size={20}
+            color="#666"
+          />
+        </TouchableOpacity>
+      </View>
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 };
@@ -52,6 +61,16 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     padding: 4,
+  },
+  error: {
+    fontSize: 14,
+    color: colors.error,
+    paddingHorizontal: 8,
+  },
+  container: {
+    gap: 8,
+    flex: 1,
+    flexDirection: "column",
   },
 });
 

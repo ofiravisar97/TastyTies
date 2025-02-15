@@ -1,4 +1,10 @@
-import { View, TextInput, StyleSheet, Text } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  TextInputProps,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps } from "react";
 import colors from "../consts/colors";
@@ -6,27 +12,18 @@ import colors from "../consts/colors";
 type IconName = ComponentProps<typeof Ionicons>["name"];
 
 type Props = {
-  setValue: (val: string) => void;
-  value: string;
   iconName: IconName;
   error?: string;
-};
+} & TextInputProps;
 
-const Input = ({ setValue, value, iconName, error }: Props) => {
+const Input = ({ iconName, error, ...props }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Ionicons name={iconName} size={20} color="#666" />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={value}
-          onChangeText={setValue}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <TextInput style={styles.input} {...props} />
       </View>
-      <Text style={styles.error}>{error}</Text>
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 };

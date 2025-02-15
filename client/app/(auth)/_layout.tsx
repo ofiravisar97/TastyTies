@@ -1,4 +1,8 @@
 import { Slot } from "expo-router";
-export default function AuthLayout() {
-    return <Slot/>
+export default function RootLayout() {
+  return (
+    <>
+      <Slot />
+    </>
+  );
 }
