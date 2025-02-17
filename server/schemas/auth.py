@@ -23,3 +23,12 @@ class UserCreate(BaseModel):
         if len(v) < 8:
             raise ValueError('password must be at least 8 characters')
         return v
+    
+class UserLogin(BaseModel):
+    email: str
+    password: str
+    
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str

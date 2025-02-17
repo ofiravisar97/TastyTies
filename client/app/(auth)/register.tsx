@@ -18,7 +18,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { RegisterDataType, registerSchema } from "../../src/schemas/auth";
 import { z } from "zod";
-import * as Burnt from "burnt";
+import Toast from "react-native-toast-message";
+import axios from "../../src/api/axios";
+import { AxiosError } from "axios";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -35,14 +37,15 @@ const RegisterPage = () => {
     try {
       setLoading(true);
       setErrors({});
-      Burnt.toast({
-        title: "Registered successfully",
-        preset: "done",
-        haptic: "success",
+      registerSchema.parse(userData);
+      const res = await axios.post("/auth/register", userData);
+      Toast.show({
+        type: "success",
+        text1: "User successfully registered.",
       });
-
-      const l = registerSchema.parse(userData);
+      router.back();
     } catch (error) {
+      let e = error as AxiosError<{ detail: string }>;
       if (error instanceof z.ZodError) {
         const formattedErrors: Record<string, string> = {};
         error.errors.forEach((err) => {
@@ -51,7 +54,16 @@ const RegisterPage = () => {
           }
         });
         setErrors(formattedErrors);
-      }
+      } else if (e.status === 400) {
+        Toast.show({
+          type: "error",
+          text1: e.response?.data?.detail,
+        });
+      } else
+        Toast.show({
+          type: "error",
+          text1: "Something happened. Please try again later.",
+        });
     } finally {
       setLoading(false);
     }

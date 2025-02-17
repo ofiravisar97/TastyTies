@@ -17,6 +17,11 @@ import Input from "../../src/components/Input";
 import Button from "../../src/components/Button";
 import colors from "../../src/consts/colors";
 import { useRouter } from "expo-router";
+import axios from "../../src/api/axios";
+import { AxiosError } from "axios";
+import Toast from "react-native-toast-message";
+import useAuthStore from "../../src/store/auth"; // adjust the path as needed
+import * as SecureStore from "expo-secure-store";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -24,9 +29,32 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Add your login logic here
-    console.log("Login attempted", { email, password });
+  const handleLogin = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("username", email);
+      formData.append("password", password);
+
+      const res = await axios.post("/auth/token", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const refresh = res.data.refresh_token;
+      const token = res.data.access_token;
+
+      useAuthStore.getState().setAccessToken(token);
+      await SecureStore.setItemAsync("refreshToken", refresh);
+
+      router.replace("/home");
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log(error);
+      let msg =
+        error.status === 401 ? "Invalid credentials." : "Something went wrong.";
+      Toast.show({
+        text1: msg,
+        type: "error",
+      });
+    }
   };
 
   return (
@@ -53,6 +81,8 @@ const LoginPage = () => {
               keyboardType="email-address"
               autoCapitalize="none"
               iconName="mail-outline"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
             />
             <PasswordInput
               onChangeText={(password) => setPassword(password)}
